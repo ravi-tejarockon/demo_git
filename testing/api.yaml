@@ -1,0 +1,138 @@
+openapi: 3.0.1
+info:
+  title: API
+  version: '1.0'
+servers:
+  - url: /
+tags:
+  - name: OmniScience
+    description: OmniScience Combined layer APIs
+paths:
+  /clm/portfolio-upload:
+    post:
+      tags:
+        - default
+      operationId: post_clm_post_resource
+      parameters:
+        - name: clm_portfolio_name
+          in: query
+          required: true
+          description: >-
+            Combine layer Mapping Portfolio Name, it is directly mapped to table
+            name in database.
+          schema:
+            type: string
+        - name: change_log
+          in: query
+          required: true
+          description: 'Whatever changes performed on UI, will be captured & sent here.'
+          schema:
+            type: string
+        - name: ascent_issue_number
+          in: query
+          required: true
+          description: Issue number related to JIRA.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Success
+          content: {}
+  '/clm/{table_name}':
+    get:
+      tags:
+        - default
+      operationId: get_clm_list_resource
+      parameters:
+        - name: table_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content: {}
+  /clm/all:
+    get:
+      tags:
+        - default
+      operationId: get_clm_list_resource_all
+      responses:
+        '200':
+          description: Success
+          content: {}
+  /clm/bulkload-clm-portfolio:
+    post:
+      tags:
+        - default
+      operationId: bulkload_clm_post_resource
+      parameters:
+        - name: clm_portfolio_url
+          in: query
+          required: true
+          description: GitHub absolute url with JSON pointing.
+          schema:
+            type: string
+        - name: portfolio_name
+          in: query
+          required: true
+          description: 'Portfolio Name, this will be used to create table name in DB.'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content: {}
+  /clm/omni-jira-api:
+    post:
+      tags:
+        - default
+      operationId: jira-api-with-file-attachment
+      parameters:
+        - name: ascent_issue_number
+          in: query
+          required: true
+          description: JIRA issue number.
+          schema:
+            type: string
+        - name: change_log_or_description
+          in: query
+          required: true
+          description: >-
+            Change log details or any description you need to upload to JIRA
+            Issue.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Success
+          content: {}
+components:
+  responses:
+    MaskError:
+      description: When any error occurs on mask
+      content: {}
+    ParseError:
+      description: When a mask can't be parsed
+      content: {}
